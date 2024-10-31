@@ -1,2 +1,3 @@
 # cpolar_url_checker
-定时获取cpolar免费版中的公网url
+鉴于cpolar免费版没有官方api来获取隧道以及对应host，于是本人使用Python脚本定时获取cpolar免费版中的公网url并通过pushplus推送到微信消息中。
+代码很通俗易懂，也很简陋，欢迎自取并修改。
