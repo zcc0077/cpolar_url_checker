@@ -19,18 +19,21 @@ g_sleep = 1800
 
 
 def push_wechat(title, msg):
-    global g_token
-    url = 'http://www.pushplus.plus/send'
-    data = {
-        "token": g_token,
-        "title": title,
-        "content": msg
-    }
-    body = json.dumps(data).encode(encoding='utf-8')
-    headers = {'Content-Type': 'application/json'}
-    response = requests.post(url, data=body, headers=headers)
-    if response.status_code != 200:
-        logging.error(f'Fail to send message to wechat, response: {response.text}')
+    try:
+        global g_token
+        url = 'http://www.pushplus.plus/send'
+        data = {
+            "token": g_token,
+            "title": title,
+            "content": msg
+        }
+        body = json.dumps(data).encode(encoding='utf-8')
+        headers = {'Content-Type': 'application/json'}
+        response = requests.post(url, data=body, headers=headers)
+        if response.status_code != 200:
+            logging.error(f'Fail to send message to wechat, response: {response.text}')
+    except Exception as e:
+        logging.error(f"Pushplus 推动失败: {e}")
 
 
 def read_config():
