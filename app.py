@@ -33,7 +33,7 @@ def push_wechat(title, msg):
         if response.status_code != 200:
             logging.error(f'Fail to send message to wechat, response: {response.text}')
     except Exception as e:
-        logging.error(f"Pushplus 推动失败: {e}")
+        logging.error(f"Pushplus 推送失败: {e}")
 
 
 def read_config():
