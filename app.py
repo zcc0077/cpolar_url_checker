@@ -58,6 +58,15 @@ def read_config():
     return username, password
 
 
+def dict_to_string(data):
+    result = []
+    for key, values in data.items():
+        result.append(f"{key}:")
+        for value in values:
+            result.append(f"    {value}")
+    return "\n".join(result)
+
+
 def login(session, username, password):
     try:
         login_page_url = 'https://dashboard.cpolar.com/login'
@@ -157,15 +166,17 @@ def main():
                 tunnels = parse_status_page(status_page)
                 for tunnel in tunnels:
                     logging.info(f"隧道名称: {tunnel}, 公网地址: {tunnels[tunnel]}")
-                    str_tunnel = json.dumps(tunnels[tunnel], indent=4, ensure_ascii=False)
+                    #str_tunnel = json.dumps(tunnels[tunnel], indent=4, ensure_ascii=False)
                     if tunnel not in g_tunnels:
-                        push_wechat(f'检测到新的隧道[{tunnel}]', f'公网地址:{str_tunnel}')
-                        logging.info(f"检测到新的隧道: {tunnel}, 公网地址: {tunnels[tunnel]}")
                         g_tunnels[tunnel] = tunnels[tunnel]
+                        str_tunnel = json.dumps(g_tunnels, indent=4, ensure_ascii=False)
+                        push_wechat(f'检测到新的隧道[{tunnel}]', f'{dict_to_string(g_tunnels)}')
+                        logging.info(f'检测到新的隧道: {tunnel}, 公网地址: {tunnels[tunnel]}')
                     for url in tunnels[tunnel]:
                         if url not in g_tunnels[tunnel]:
-                            push_wechat(f'隧道[{tunnel}]地址发生变化', f'新的隧道地址:{tunnels[tunnel]}')
                             g_tunnels[tunnel] = tunnels[tunnel]
+                            push_wechat(f'隧道[{tunnel}]地址发生变化', f'{dict_to_string(g_tunnels)}')
+                            logging.info(f'隧道[{tunnel}]地址发生变化', f'{tunnels[tunnel]}')
                             break
             else:
                 logging.error('Failed to get status page')
